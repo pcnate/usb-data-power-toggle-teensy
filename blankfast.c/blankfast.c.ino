@@ -39,6 +39,7 @@ void loop() {
     ledClock = millis();
   }
 
+  // check for power
   if( ( millis() - buttonClock ) >= BUTTON_DEBOUNCE_DELAY ) {
     if( digitalRead(7) == LOW ) {
       Serial.println("Button1 is pressed");
@@ -57,5 +58,5 @@ void loop() {
 
     buttonClock = millis();
   }
-  delay(1);
+  
 }

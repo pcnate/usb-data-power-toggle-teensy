@@ -40,15 +40,18 @@ void setup() {
 }
 
 void powerOn() {
-
+  digitalWrite( outputPower, HIGH );
 }
 
 void dataOn() {
-
+  powerOn();
+  delay( POWER_TO_DATA_DELAY );
+  digitalWrite( outputData, HIGH );
 }
 
 void powerOff() {
-
+  digitalWrite( outputPower, LOW );
+  digitalWrite( outputData, LOW );
 }
 
 void loop() {
@@ -72,13 +75,11 @@ void loop() {
   // check for power
   if( ( millis() - buttonClock ) >= BUTTON_DEBOUNCE_DELAY ) {
     if( digitalRead( powerDetect ) == POWER_OFF ) {
-      digitalWrite( outputPower, LOW );
       if( powerState ) {
         powerState = false;
         Serial.println("POWER_OFF");
       }
     } else {
-      digitalWrite( outputPower, HIGH );
       if( !powerState ) {
         powerState = true;
         Serial.println("POWER_ON");
@@ -86,9 +87,6 @@ void loop() {
     }
     if( digitalRead( userButton1 ) == LOW ) {
       Serial.println("Button2 is pressed");
-      digitalWrite( outputData, HIGH );
-    } else {
-      digitalWrite( outputData, LOW );
     }
 
     buttonClock = millis();

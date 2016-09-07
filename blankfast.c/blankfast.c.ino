@@ -2,6 +2,7 @@
 
 const int BUTTON_DEBOUNCE_DELAY = 2500;
 const int LED_CLOCK_DELAY = 49;
+const int POWER_TO_DATA_DELAY = 100;
 
 const bool POWER_OFF = HIGH;
 

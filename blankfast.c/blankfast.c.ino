@@ -54,17 +54,16 @@ void powerOff() {
 void loop() {
 
   if( !serialStatus && Serial.dtr() ) {
+    delay( 100 );
     serialStatus = true;
-    digitalWrite( outputSerial, serialStatus );
     Serial.println( powerState ? "POWER_ON" : "POWER_OFF");
   }
   if( serialStatus && !Serial.dtr() ) {
     serialStatus = false;
-    digitalWrite( outputSerial, serialStatus );
   }
 
   // flash the led
-  if( ( millis() - ledClock ) >= LED_CLOCK_DELAY ) {
+  if( ( millis() - ledClock ) >= LED_CLOCK_DELAY * ( serialStatus ? 1 : 4 ) ) {
     digitalWrite(led, ledState ? HIGH : LOW );
     ledState = !ledState;
     ledClock = millis();

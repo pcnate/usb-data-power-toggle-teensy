@@ -21,6 +21,8 @@ bool serialStatus = false;
 bool ledState = false;
 bool powerState = false;
 
+byte incomingByte;
+
 void setup() {
 
   // buttons
@@ -92,6 +94,12 @@ void loop() {
     }
 
     buttonClock = millis();
+  }
+
+  // read the serial and check for messages
+  if( Serial.available() ) {
+    Serial.println("serial data recieved");
+    incomingByte = Serial.read();
   }
 
 }

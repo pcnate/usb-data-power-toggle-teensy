@@ -22,7 +22,7 @@ bool serialStatus = false;
 bool ledState = false;
 bool powerState = false;
 
-byte incomingByte;
+char incomingByte;
 
 void setup() {
 
@@ -99,6 +99,7 @@ void loop() {
   if( Serial.available() ) {
     Serial.println("serial data recieved");
     incomingByte = Serial.read();
+    Serial.println( incomingByte );
   }
 
 }

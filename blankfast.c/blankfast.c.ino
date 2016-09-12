@@ -157,23 +157,25 @@ void loop() {
   if( byteCount > 0 ) {
 
     if( isPowerOn( incomingCommand ) ) {
-      Serial.println("power on command received");
       powerOn();
     } else
 
     if( isPowerOff( incomingCommand ) ) {
-      Serial.println("power off command received");
       powerOff();
     } else
 
     if( isDataOn( incomingCommand ) ) {
-      Serial.println("data on command received");
       dataOn();
     } else
 
     {
-      Serial.println( "unknown command received" );
+      Serial.print( "Unknown command received\t" );
       Serial.println( incomingCommand );
+      Serial.println("");
+      Serial.println("Commands available:");
+      Serial.println("\t'power on'");
+      Serial.println("\t'power off'");
+      Serial.println("\t'data on'");
     }
 
     // clear the incomingCommand

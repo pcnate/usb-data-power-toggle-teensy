@@ -3,6 +3,7 @@
 const int BUTTON_DEBOUNCE_DELAY = 2500;
 const int LED_CLOCK_DELAY = 49;
 const int POWER_TO_DATA_DELAY = 100;
+const int MAX_MESSAGE_LENGTH = 10;
 
 const bool POWER_OFF = HIGH;
 
@@ -17,12 +18,14 @@ const int userButton1 = 8;
 
 unsigned long buttonClock = 0;
 unsigned long ledClock = 0;
+unsigned int byteCount = 0;
 
 bool serialStatus = false;
 bool ledState = false;
 bool powerState = false;
 
 char incomingByte;
+char incomingCommand[MAX_MESSAGE_LENGTH];
 
 void setup() {
 
@@ -55,6 +58,54 @@ void dataOn() {
 void powerOff() {
   digitalWrite( outputPower, LOW );
   digitalWrite( outputData, LOW );
+}
+
+boolean isPowerOn( char incomingCommand[MAX_MESSAGE_LENGTH] ) {
+  int size = 8;
+  char command[8] = { 'p', 'o', 'w', 'e', 'r', ' ', 'o', 'n' };
+  boolean rtn = true;
+
+  int sizeCount = 0;
+  while( sizeCount < size ) {
+    if( incomingCommand[sizeCount] != command[sizeCount] ) {
+      rtn = false;
+    }
+    sizeCount++;
+  }
+
+  return rtn;
+}
+
+boolean isPowerOff( char incomingCommand[MAX_MESSAGE_LENGTH] ) {
+  int size = 9;
+  char command[9] = { 'p', 'o', 'w', 'e', 'r', ' ', 'o', 'f', 'f' };
+  boolean rtn = true;
+
+  int sizeCount = 0;
+  while( sizeCount < size ) {
+    if( incomingCommand[sizeCount] != command[sizeCount] ) {
+      rtn = false;
+    }
+    sizeCount++;
+  }
+
+  return rtn;
+}
+
+boolean isDataOn( char incomingCommand[MAX_MESSAGE_LENGTH] ) {
+  int size = 7;
+  char command[7] = { 'd','a','t','a', ' ', 'o', 'n' };
+  boolean rtn = true;
+
+  int sizeCount = 0;
+  while( sizeCount < size ) {
+    if( incomingCommand[sizeCount] != command[sizeCount] ) {
+      rtn = false;
+    }
+    sizeCount++;
+  }
+
+  return rtn;
 }
 
 void loop() {
@@ -95,11 +146,43 @@ void loop() {
     buttonClock = millis();
   }
 
+  byteCount = 0;
   // read the serial and check for messages
-  if( Serial.available() ) {
-    Serial.println("serial data recieved");
-    incomingByte = Serial.read();
-    Serial.println( incomingByte );
+  while( Serial.available() && byteCount < MAX_MESSAGE_LENGTH ) {
+    incomingCommand[byteCount] = Serial.read();
+    byteCount++;
+  }
+
+  // if a message was received, check for messages
+  if( byteCount > 0 ) {
+
+    if( isPowerOn( incomingCommand ) ) {
+      Serial.println("power on command received");
+      powerOn();
+    } else
+
+    if( isPowerOff( incomingCommand ) ) {
+      Serial.println("power off command received");
+      powerOff();
+    } else
+
+    if( isDataOn( incomingCommand ) ) {
+      Serial.println("data on command received");
+      dataOn();
+    } else
+
+    {
+      Serial.println( "unknown command received" );
+      Serial.println( incomingCommand );
+    }
+
+    // clear the incomingCommand
+    byteCount = 0;
+    while( byteCount < MAX_MESSAGE_LENGTH ) {
+      incomingCommand[byteCount] = ' ';
+      byteCount++;
+    }
+
   }
 
 }

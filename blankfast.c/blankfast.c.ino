@@ -2,7 +2,7 @@
 
 const int BUTTON_DEBOUNCE_DELAY = 2500;
 const int LED_CLOCK_DELAY = 59;
-const int POWER_TO_DATA_DELAY = 100;
+const int POWER_TO_DATA_DELAY = 200;
 const int MAX_MESSAGE_LENGTH = 10;
 
 const bool POWER_OFF = HIGH;
@@ -50,14 +50,25 @@ void powerOn() {
 }
 
 void dataOn() {
-  powerOn();
-  delay( POWER_TO_DATA_DELAY );
+  digitalWrite( outputPower, HIGH );
+  unsigned long time = millis() + POWER_TO_DATA_DELAY;
+  Serial.println( time );
+  while( millis() < time ) {
+    delay( 5 );
+  }
+  Serial.println( millis() );
   digitalWrite( outputData, HIGH );
 }
 
 void powerOff() {
-  digitalWrite( outputPower, LOW );
   digitalWrite( outputData, LOW );
+  unsigned long time = millis() + POWER_TO_DATA_DELAY;
+  Serial.println( time );
+  while( millis() < time ) {
+    delay( 5 );
+  }
+  Serial.println( millis() );
+  digitalWrite( outputPower, LOW );
 }
 
 boolean isPowerOn( char incomingCommand[MAX_MESSAGE_LENGTH] ) {

@@ -52,22 +52,18 @@ void powerOn() {
 void dataOn() {
   digitalWrite( outputPower, HIGH );
   unsigned long time = millis() + POWER_TO_DATA_DELAY;
-  Serial.println( time );
   while( millis() < time ) {
     delay( 5 );
   }
-  Serial.println( millis() );
   digitalWrite( outputData, HIGH );
 }
 
 void powerOff() {
   digitalWrite( outputData, LOW );
   unsigned long time = millis() + POWER_TO_DATA_DELAY;
-  Serial.println( time );
   while( millis() < time ) {
     delay( 5 );
   }
-  Serial.println( millis() );
   digitalWrite( outputPower, LOW );
 }
 
@@ -151,7 +147,7 @@ void loop() {
       }
     }
     if( digitalRead( userButton1 ) == LOW ) {
-      Serial.println("Button2 is pressed");
+      Serial.println("Button2");
     }
 
     buttonClock = millis();
